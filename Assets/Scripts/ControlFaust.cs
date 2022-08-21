@@ -6,7 +6,7 @@ using Leap.Unity;
 
 public class ControlFaust : MonoBehaviour
 {   
-    public FaustPlugin_suka_final thePlygin;
+    public FaustPlugin_suka_final thePlugin;
     public float velScaling;
     public float weightSeconds;
 
@@ -43,7 +43,7 @@ public class ControlFaust : MonoBehaviour
         _prevVel = new float[4] {0.0f, 0.0f, 0.0f, 0.0f};
         _prevElbowVel = new float[4] {0.0f, 0.0f, 0.0f, 0.0f};
         _prevWristVel = new float[4] {0.0f, 0.0f, 0.0f, 0.0f};
-        thePlygin.setParameter(0, 1);
+        thePlugin.setParameter(0, 1);
     }
 
     // Update is called once per frame
@@ -58,8 +58,8 @@ public class ControlFaust : MonoBehaviour
             // setting bowing velocity through 
             // the velocity of the left palm
             _velocity = smooFilter(_prevVel, _handR.PalmVelocity.Magnitude);
-            // thePlygin.setParameter(0, _velocity*velScaling);
-            thePlygin.setParameter(0,weightEffort(_handR)*velScaling);
+            // thePlugin.setParameter(0, _velocity*velScaling);
+            thePlugin.setParameter(0,weightEffort(_handR)*velScaling);
             isSeenFlag = true;
         }
         else
@@ -71,10 +71,10 @@ public class ControlFaust : MonoBehaviour
         if(_handL != null)
         {
             _gain = pinching();
-            thePlygin.setParameter(5, _gain);
+            thePlugin.setParameter(5, _gain);
 
-            _pitch = normal();
-            thePlygin.setParameter(4, _pitch);
+            _pitch = roll();
+            thePlugin.setParameter(4, _pitch);
 
         }
 
@@ -89,9 +89,9 @@ public class ControlFaust : MonoBehaviour
     }
 
 
-    // handling and mapping normal 
+    // handling and mapping roll 
 
-    private float normal()
+    private float roll()
     {
         return mapping(_handL.PalmNormal.Roll, -3.14f, 3.14f, 300.0f, 1000.0f);
     }
@@ -110,16 +110,12 @@ public class ControlFaust : MonoBehaviour
         // calculate velocity for each joint
         if(isSeenFlag)
         {
-
-            
             velElbow = (_currPosElbow - _prevPosElbow)/Time.deltaTime;
             velWrist = (_currPosWrist - _prevPosWrist)/Time.deltaTime;
             
             // filtering 
             float velElbowMag = smooFilter(_prevElbowVel, velElbow.Magnitude);
             float velWristMag = smooFilter(_prevElbowVel, velWrist.Magnitude);
-
-            
 
             // sqare and add together
             // put in a list
