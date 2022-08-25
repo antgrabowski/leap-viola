@@ -44,6 +44,7 @@ public class ControlFaust : MonoBehaviour
         _prevElbowVel = new float[4] {0.0f, 0.0f, 0.0f, 0.0f};
         _prevWristVel = new float[4] {0.0f, 0.0f, 0.0f, 0.0f};
         thePlugin.setParameter(0, 1);
+        thePlugin.setParameter(5,-95.0f);
     }
 
     // Update is called once per frame
